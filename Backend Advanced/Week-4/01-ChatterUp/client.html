@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatterUp</title>
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/b988e34ec9.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <i class="fa-brands fa-facebook-messenger"></i>
+      <h1>Chatter Up</h1>
+    </header>
+    <main>
+      <div id="chat_container">
+        <div id="welcome_message"></div>
+        <div id="messages"></div>
+        <form id="message_form">
+          <input
+            type="text"
+            placeholder="Type your message..."
+            required
+            name="message"
+            id="message_input"
+          />
+          <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+      </div>
+      <div id="connected_user">
+        <p id="connected_user_heading">
+          Connected User: <span id="connected_user_number">0</span>
+        </p>
+        <div id="connected_user_active"></div>
+      </div>
+    </main>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+    <script>
+      const socket = io.connect('http://localhost:3000');
+      //getting elements
+      const chatContainer = document.getElementById('chat_container');
+      const connectedUser = document.getElementById('connected_user');
+      const connectedUserActive = document.getElementById(
+        'connected_user_active'
+      );
+      const connectedUserNumber = document.getElementById(
+        'connected_user_number'
+      );
+      const messageForm = document.getElementById('message_form');
+      const messagesDiv = document.getElementById('messages');
+      const messageInput = document.getElementById('message_input');
+      const hamburger = document.getElementById('hamburger');
+      const welcomeContainer = document.getElementById('welcome_message');
+      welcomeContainer.style.display = 'none';
+      //getting username
+      let username = prompt('Enter your name to join the room');
+      username = username.trim().toUpperCase();
+      // event to join user to room and add the user to database
+      socket.emit('joinUser', username);
+      // event to handle new user welcome message
+      socket.on('welcome', (message) => {
+        displayWelcomeMessage(message);
+      });
+      // event to handle new user entry
+      socket.on('roomAlert', async (users) => {
+        connectedUserNumber.innerHTML = '';
+        connectedUserActive.innerHTML = '';
+        displayUserConnected(users);
+      });
+      //event to emit message form submit
+      messageForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const message = e.target.message.value;
+        socket.emit('newMessage', { username, message });
+        e.target.message.value = '';
+        socket.emit('userNotTyping');
+      });
+      //typing user notification
+      const userTyping = document.createElement('p');
+      userTyping.style.marginLeft = 'auto';
+      messageInput.addEventListener('input', function () {
+        socket.emit('userTyping', username);
+      });
+
+      messageInput.addEventListener('blur', function () {
+        socket.emit('userNotTyping');
+      });
+      socket.on('resUserTyping', (message) => {
+        userTyping.innerText = message;
+        welcomeContainer.appendChild(userTyping);
+      });
+      socket.on('resUserNotTyping', () => {
+        if (!userTyping) {
+          console.log('first');
+        }
+        welcomeContainer.removeChild(userTyping);
+      });
+      // event to handle message
+      socket.on(
+        'broadcastMessage',
+        ({ username, message, currentTime, imageUrl }) => {
+          displayUserMessages(username, message, currentTime, imageUrl);
+        }
+      );
+      socket.on('previousMessages', (previousMessages) => {
+        messagesDiv.innerHTML = '';
+        displayPreviousMessages(previousMessages);
+      });
+      //function to display previous messages
+      function displayPreviousMessages(previousMessages) {
+        previousMessages.forEach(async (prev) => {
+          const currentTime = moment(prev.createdAt).format('hh:mm A');
+          const imageUrl = await fetch(`https://robohash.org/${prev.username}`);
+          console.log(imageUrl);
+          displayUserMessages(
+            prev.username,
+            prev.message,
+            currentTime,
+            imageUrl.url
+          );
+        });
+      }
+      //function to display messages
+      function displayUserMessages(name, message, currentTime, imageUrl) {
+        const messageContainer = document.createElement('div');
+        messageContainer.classList.add('message_container');
+        if (username === name) {
+          messageContainer.style.alignSelf = 'flex-end';
+        }
+        const avatar = document.createElement('img');
+        avatar.classList.add('message_avatar');
+        avatar.src = imageUrl;
+        const messageBox = document.createElement('div');
+        messageBox.classList.add('message_box');
+        if (username === name) {
+          messageBox.style.borderTopLeftRadius = '10px';
+          messageBox.style.borderTopRightRadius = '10px';
+          messageBox.style.borderBottomLeftRadius = '10px';
+          messageBox.style.borderBottomRightRadius = '3px';
+        } else {
+          messageBox.style.borderTopLeftRadius = '10px';
+          messageBox.style.borderTopRightRadius = '10px';
+          messageBox.style.borderBottomRightRadius = '10px';
+          messageBox.style.borderBottomLeftRadius = '3px';
+        }
+        const messageText = document.createElement('p');
+        messageText.classList.add('message_text');
+
+        const usernameText = document.createElement('p');
+        usernameText.classList.add('message_user');
+
+        const timeText = document.createElement('p');
+        timeText.classList.add('message_time');
+
+        messageText.innerText = message;
+        usernameText.innerText = name;
+        timeText.innerText = currentTime;
+        messageBox.appendChild(messageText);
+        messageBox.appendChild(usernameText);
+        messageBox.appendChild(timeText);
+        messageContainer.appendChild(avatar);
+        messageContainer.appendChild(messageBox);
+        messagesDiv.appendChild(messageContainer);
+        messagesDiv.scrollTop = messageBox.scrollHeight;
+      }
+      // function to display users online
+      function displayUserConnected(users) {
+        users.forEach((user) => {
+          const userContainer = document.createElement('div');
+          const userText = document.createElement('p');
+          const activeIcon = document.createElement('i');
+          activeIcon.classList.add('fa-solid', 'fa-circle');
+          userText.innerText = user.username;
+          userContainer.id = 'user_container';
+          userContainer.appendChild(activeIcon);
+          userContainer.appendChild(userText);
+          connectedUserActive.appendChild(userContainer);
+        });
+        connectedUserNumber.innerText = users.length;
+      }
+      // function to display welcome message
+      function displayWelcomeMessage(message) {
+        welcomeContainer.style.display = 'flex';
+        const welcomeText = document.createElement('p');
+        const activeIcon = document.createElement('i');
+        activeIcon.classList.add('fa-solid', 'fa-circle');
+        welcomeText.innerText = message;
+        welcomeContainer.appendChild(activeIcon);
+        welcomeContainer.appendChild(welcomeText);
+      }
+    </script>
+  </body>
+</html>
