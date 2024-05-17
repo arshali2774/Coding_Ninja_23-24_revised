@@ -1,0 +1,18 @@
+/* Write code for your CSS here */
+#hero {
+  padding: 1rem;
+}
+#skills {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  p {
+    background-color: aqua;
+    padding: 0.5rem;
+    border-radius: 10px;
+  }
+}
+
+#about {
+  padding: 1rem;
+}
