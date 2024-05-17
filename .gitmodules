@@ -19,3 +19,6 @@
 [submodule "Skill Tests/02-Backend Skill Test/Habit_tracker"]
 	path = Skill Tests/02-Backend Skill Test/Habit_tracker
 	url = https://github.com/arshali2774/Habit_Tracker_CN
+[submodule "Skill Tests/02-Backend Skill Test/Authentication_template"]
+	path = Skill Tests/02-Backend Skill Test/Authentication_template
+	url = https://github.com/arshali2774/Nodejs_auth_CN
