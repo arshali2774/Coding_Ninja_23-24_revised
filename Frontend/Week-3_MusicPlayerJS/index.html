@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Music Player</title>
+    <link
+      rel="stylesheet"
+      href="./style.css"
+    />
+  </head>
+  <body>
+    <main id="wrapper">
+      <section id="toggle">
+        <div id="toggle_container">
+          <input
+            type="checkbox"
+            id="toggle_checkbox"
+          />
+          <div id="toggle_button"></div>
+          <p id="toggle_text">Dark</p>
+        </div>
+      </section>
+      <section id="title">
+        <h1>Music Player</h1>
+      </section>
+      <section id="app">
+        <div
+          id="all_songs"
+          class="bg_blue app_part"
+        >
+          <div id="filter">
+            <p>Filter by Genre:</p>
+            <select
+              name="genre"
+              id="genre_filter"
+            >
+              <option value="all">All</option>
+              <option value="pop">Pop</option>
+              <option value="indie">Indie</option>
+              <option value="rap">rap</option>
+            </select>
+          </div>
+          <h2>All Songs</h2>
+          <div id="songs_list">
+            <!-- -------------------------- songs appear here -------------------------- -->
+          </div>
+        </div>
+        <div
+          id="player"
+          class="bg_blue app_part"
+        >
+          <div id="album_cover">
+            <img
+              src="./images/musicPlayer.webp"
+              alt="album cover"
+              id="cover"
+            />
+            <p id="song_name">Song Name</p>
+            <p id="artist_name">Artist name</p>
+          </div>
+          <audio
+            controls
+            id="player_control"
+          >
+            <!-- <source src="horse.ogg" type="audio/ogg"> -->
+            <source
+              id="player_source"
+              src=""
+              type="audio/mpeg"
+            />
+            Your browser does not support the audio element.
+          </audio>
+          <div id="change_song">
+            <button id="prev_song">Prev</button>
+            <button id="next_song">Next</button>
+          </div>
+          <button id="add_to_playlist">Add To Playlist</button>
+        </div>
+        <div
+          id="playlist"
+          class="app_part"
+        >
+          <div id="create_playlist">
+            <input
+              type="text"
+              name="playlist_name"
+              id="playlist_name"
+              placeholder="Playlist Name"
+            />
+            <button id="create_playlist_btn">Create Playlist</button>
+          </div>
+          <div
+            id="playlist_list"
+            class="bg_blue"
+          >
+            <h2>Current Playlist</h2>
+            <ul id="current_playlist"></ul>
+            <h2>All Playlist</h2>
+            <ul id="all_playlist"></ul>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="./index.js"></script>
+  </body>
+</html>
