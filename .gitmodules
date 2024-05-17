@@ -22,3 +22,6 @@
 [submodule "Skill Tests/02-Backend Skill Test/Authentication_template"]
 	path = Skill Tests/02-Backend Skill Test/Authentication_template
 	url = https://github.com/arshali2774/Nodejs_auth_CN
+[submodule "Skill Tests/02-Backend Skill Test/Polling_System_api"]
+	path = Skill Tests/02-Backend Skill Test/Polling_System_api
+	url = https://github.com/arshali2774/Polling_System_API_CN
