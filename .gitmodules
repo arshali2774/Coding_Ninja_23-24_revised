@@ -13,3 +13,6 @@
 [submodule "Skill Tests/Backend Skill Test/Polling_System_API"]
 	path = Skill Tests/Backend Skill Test/Polling_System_API
 	url = https://github.com/arshali2774/Polling_System_API_CN
+[submodule "Skill Tests/01-Frontend Skill Test/Alarm_Clock_project"]
+	path = Skill Tests/01-Frontend Skill Test/Alarm_Clock_project
+	url = https://github.com/arshali2774/CodingNinja_AlarmProject
