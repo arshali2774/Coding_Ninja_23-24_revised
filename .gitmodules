@@ -1,3 +1,6 @@
 [submodule "Skill Tests/Frontend Skill Test/Alarm_Clock_Project"]
 	path = Skill Tests/Frontend Skill Test/Alarm_Clock_Project
 	url = https://github.com/arshali2774/CodingNinja_AlarmProject
+[submodule "Backend Basics/Week-4/04-Postaway"]
+	path = Backend Basics/Week-4/04-Postaway
+	url = https://github.com/arshali2774/Postaway-CN
