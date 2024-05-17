@@ -16,3 +16,6 @@
 [submodule "Skill Tests/01-Frontend Skill Test/Alarm_Clock_project"]
 	path = Skill Tests/01-Frontend Skill Test/Alarm_Clock_project
 	url = https://github.com/arshali2774/CodingNinja_AlarmProject
+[submodule "Skill Tests/02-Backend Skill Test/Habit_tracker"]
+	path = Skill Tests/02-Backend Skill Test/Habit_tracker
+	url = https://github.com/arshali2774/Habit_Tracker_CN
