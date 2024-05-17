@@ -1,0 +1,118 @@
+<!-- MODAL -->
+<div class="modal_register">
+  <div class="heading_div">
+    <h2>Experience Easily!</h2>
+    <button
+      class="cross_btn"
+      id="cross_register"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <form
+    action="/register"
+    method="POST"
+  >
+    <div class="input_container">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        class="input_styles"
+        required
+      />
+    </div>
+    <div class="input_container">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        class="input_styles"
+        required
+      />
+    </div>
+    <div class="input_container">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="input_styles"
+        required
+      />
+    </div>
+    <button id="register_user">Register</button>
+  </form>
+  <div id="login_part">
+    <p>Already Registered?</p>
+    <button id="login_user">Login</button>
+  </div>
+</div>
+<div class="modal_login">
+  <div class="heading_div">
+    <h2>Experience Easily!</h2>
+    <button
+      class="cross_btn"
+      id="cross_login"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <form
+    action="/"
+    method="POST"
+  >
+    <div class="input_container">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email_login"
+        name="email"
+        class="input_styles"
+        required
+      />
+    </div>
+    <div class="input_container">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password_login"
+        name="password"
+        class="input_styles"
+        required
+      />
+    </div>
+    <button id="login_user">Login</button>
+  </form>
+</div>
+<%if(errors){%>
+<div class="modal_errors">
+  <p><%=errors%></p>
+  <a href="/">OK</a>
+</div>
+<%}%>
+<div id="wrapper_home">
+  <div id="home_left">
+    <h1>
+      A comprehensive platform for reliable <br />
+      job opprtunities and internships.
+    </h1>
+    <p>Get discovered. Get Hired.</p>
+    <div id="btn_container">
+      <a
+        href="/jobs"
+        id="seeker_btn"
+        >I'm a Job Seeker</a
+      >
+      <button id="recruiter_btn">I'm a Recruiter</button>
+    </div>
+  </div>
+  <div id="home_right">
+    <img
+      src="/images/Home_Image.png"
+      alt="Job seeker image"
+    />
+  </div>
+</div>

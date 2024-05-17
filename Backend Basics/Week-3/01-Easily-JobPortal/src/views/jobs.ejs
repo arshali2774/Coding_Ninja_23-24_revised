@@ -1,0 +1,33 @@
+<div id="wrapper_jobs">
+  <%AllJobs.map(job=>{%>
+  <div class="jobs">
+    <%if(job.active){%>
+    <div class="active">
+      <p>Actively hiring</p>
+      <i class="fa-solid fa-chart-line"></i>
+    </div>
+    <%}else{%>
+    <div class="in_active">
+      <p>Inactive</p>
+      <i class="fa-solid fa-box-archive"></i>
+    </div>
+    <%}%>
+    <p class="company_name"><%=job.companyName%></p>
+    <p class="position">
+      <%=job.jobCategory%> <span><%=job.jobDesignation%></span>
+    </p>
+    <p class="location">
+      <i class="fa-solid fa-location-dot"></i> <%= job.jobLocation%>
+    </p>
+    <p class="salary">
+      <i class="fa-solid fa-indian-rupee-sign"></i> <%=job.salary%>
+    </p>
+    <div class="skills">
+      <%job?.skills?.forEach(skill=>{%>
+      <p class="skill"><%=skill%></p>
+      <%})%>
+    </div>
+    <a href="/jobs/<%=job.id%>" class="details">View Details</a>
+  </div>
+  <%})%>
+</div>

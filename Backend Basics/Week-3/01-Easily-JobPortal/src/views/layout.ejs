@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HomePage</title>
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/b988e34ec9.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div id="left_nav">
+          <a href="/" class="logo">easily</a>
+          <a href="/" class="links">Home</a>
+          <a href="/jobs" class="links">Jobs</a>
+          <label class="dropdown">
+            <div class="dd-button links">
+              <%if(userName){%> <%=userName%> <%}else{%> Recruiter <%}%>
+              <i class="fa-solid fa-caret-down"></i>
+            </div>
+            <input type="checkbox" class="dd-input" id="test" />
+            <ul class="dd-menu">
+              <li>
+                <%if(userName){%>
+                <a href="/logout" id="login_nav">Logout</a>
+                <%}else{%>
+                <a href="/login" id="login_nav">Login</a>
+                <%}%>
+              </li>
+              <li class="divider"></li>
+
+              <li><a href="/postjob">Post New Job</a></li>
+            </ul>
+          </label>
+        </div>
+        <div id="right_nav">
+          <input
+            type="text"
+            name="search"
+            id="search_input"
+            placeholder="Search..."
+          />
+          <button id="search_btn">Search</button>
+        </div>
+      </nav>
+    </header>
+    <main><%-body%></main>
+    <script src="/js/home.js"></script>
+  </body>
+</html>

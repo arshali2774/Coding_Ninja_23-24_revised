@@ -1,0 +1,80 @@
+<div id="wrapper_jobs_single">
+  <h2>
+    <%= jobDetails.jobDesignation%> opportunity in <%=jobDetails.jobLocation%>
+    at <%=jobDetails.companyName%>
+  </h2>
+  <div id="details">
+    <div id="info_details">
+      <p id="company_name">
+        <i class="fa-solid fa-building"></i> <%=jobDetails.companyName%>
+      </p>
+      <p id="position">
+        <i class="fa-solid fa-briefcase"></i> <%=jobDetails.jobCategory%>
+        <%=jobDetails.jobDesignation%>
+      </p>
+      <p id="location">
+        <i class="fa-solid fa-location-dot"></i> <%=jobDetails.jobLocation%>
+      </p>
+      <p id="salary">
+        <i class="fa-solid fa-indian-rupee-sign"></i> <%=jobDetails.salary%>
+      </p>
+      <p id="due_date">
+        <i class="fa-solid fa-hourglass-half"></i> <%=jobDetails.applyBy%>
+      </p>
+      <p id="openings">
+        <i class="fa-solid fa-chart-simple"></i> Number of Openings:
+        <%=jobDetails.numberOfOpenings%>
+      </p>
+      <p id="applicants">
+        <i class="fa-solid fa-users"></i> Applicants:
+        <%=jobDetails.currentApplicants.length%>
+      </p>
+    </div>
+    <div id="skills_details">
+      <%jobDetails.skills.forEach(skill=>{%>
+      <p><%=skill%></p>
+      <%})%>
+    </div>
+    <div id="last_details">
+      <button id="apply_btn">Apply Now</button>
+      <a href="/jobs/<%=jobDetails.id%>/update" id="edit_btn">Edit Job</a>
+      <a href="/jobs/<%=jobDetails.id%>/delete" id="delete_btn">Remove Job</a>
+    </div>
+    <div id="last_posted_cont">
+      <p>Last Posted:</p>
+      <%jobDetails.jobPosted.forEach(last=>{%>
+      <p class="last_posted"><%=last%></p>
+      <%})%>
+    </div>
+  </div>
+  <div id="apply_modal">
+    <h2>Apply in Less than 1 minute</h2>
+    <form
+      action="/jobs/<%=jobDetails.id%>/applicants"
+      method="post"
+      id="apply_form"
+      enctype="multipart/form-data"
+    >
+      <div class="input_label_container">
+        <label for="name">Name</label>
+        <input type="text" name="name" required id="name" />
+      </div>
+      <div class="input_label_container">
+        <label for="email">Email</label>
+        <input type="email" name="email" required id="email" />
+      </div>
+      <div class="input_label_container">
+        <label for="contact">Contact</label>
+        <input type="tel" name="contact" required id="contact" />
+      </div>
+      <div class="input_label_container">
+        <label for="resume">Resume</label>
+        <input type="file" name="resume" required id="resume" />
+      </div>
+      <div id="btn_div">
+        <button type="submit" id="submit">Submit</button>
+        <button type="button" id="close">Close</button>
+      </div>
+    </form>
+  </div>
+</div>

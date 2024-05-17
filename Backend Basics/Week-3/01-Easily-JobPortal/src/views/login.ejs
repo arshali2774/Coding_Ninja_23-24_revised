@@ -1,0 +1,37 @@
+<%if(errors){%>
+<div class="modal_errors">
+  <p><%=errors%></p>
+  <a href="/">OK</a>
+</div>
+<%}%>
+<div id="wrapper_login">
+  <h2>Login</h2>
+  <form
+    action="/login"
+    method="POST"
+    id="login_page_form"
+  >
+    <div class="input_login_container">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email_login_page"
+        class="login_page"
+        name="email"
+        required
+      />
+    </div>
+
+    <div class="input_login_container">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password_login_page"
+        class="login_page"
+        name="password"
+        required
+      />
+    </div>
+    <button id="login_page_btn">Login</button>
+  </form>
+</div>

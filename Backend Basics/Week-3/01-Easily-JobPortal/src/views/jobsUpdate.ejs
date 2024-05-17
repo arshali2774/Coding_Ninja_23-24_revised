@@ -1,0 +1,102 @@
+<div id="wrapper_postjob">
+  <h1>Update Job</h1>
+  <form action="/jobs/<%=id%>/update" method="post" id="post_job_form">
+    <select name="jobCategory" id="department" required>
+      <option value="<%=jobCategory%>" selected disabled class="option_style">
+        <%=jobCategory%>
+      </option>
+      <option value="Tech" class="option_style">Tech</option>
+      <option value="Non Tech" class="option_style">Non Tech</option>
+    </select>
+    <select name="jobDesignation" id="designation" required>
+      <option
+        value="<%=jobDesignation%>"
+        selected
+        disabled
+        class="option_style"
+      >
+        <%=jobDesignation%>
+      </option>
+      <option value="HR" class="option_style">HR</option>
+      <option value="SDE" class="option_style">SDE</option>
+      <option value="DevOps" class="option_style">DevOps</option>
+      <option value="MERN Developer" class="option_style">
+        MERN Developer
+      </option>
+      <option value="MEAN Developer" class="option_style">
+        MEAN Developer
+      </option>
+      <option value="JAVA Developer" class="option_style">
+        JAVA Developer
+      </option>
+      <option value="Front-End Developer" class="option_style">
+        Front-End Developer
+      </option>
+      <option value="Back-End Developer" class="option_style">
+        Back-End Developer
+      </option>
+      <option value="Full-Stack Developer" class="option_style">
+        Full-Stack Developer
+      </option>
+    </select>
+    <input
+      type="text"
+      name="jobLocation"
+      placeholder="Enter Location"
+      id="location_input"
+      required
+      value="<%=jobLocation%>"
+    />
+    <input
+      type="text"
+      name="companyName"
+      id="company_input"
+      placeholder="Enter Company Name"
+      required
+      value="<%=companyName%>"
+    />
+    <input
+      type="text"
+      name="salary"
+      id="salary_input"
+      placeholder="Enter Salary"
+      required
+      value="<%=salary%>"
+    />
+    <input
+      type="number"
+      name="numberOfOpenings"
+      id="positions_input"
+      placeholder="Enter Number of Openings"
+      required
+      value="<%=numberOfOpenings%>"
+    />
+    <select name="skills" id="skills" required multiple>
+      <option value="" selected disabled class="option_style">
+        Select a skills required for this job
+      </option>
+      <option value="ReactJS" class="option_style">ReactJS</option>
+      <option value="NodeJS" class="option_style">NodeJS</option>
+      <option value="Angular" class="option_style">Angular</option>
+      <option value="MongoDB" class="option_style">MongoDB</option>
+      <option value="SQL" class="option_style">SQL</option>
+      <option value="ExpressJS" class="option_style">ExpressJS</option>
+      <option value="JAVA" class="option_style">JAVA</option>
+      <option value="Spring Boot" class="option_style">Spring Boot</option>
+      <option value="C++" class="option_style">C++</option>
+      <option value="Data Structures & Algo" class="option_style">
+        Data Structures & Algo
+      </option>
+    </select>
+    <input
+      type="text"
+      onfocus="(this.type='date')"
+      onblur="(this.type='text')"
+      name="applyBy"
+      placeholder="Last date to apply"
+      required
+      value="<%=applyBy%>"
+    />
+    <button type="submit" id="form_submit">Submit</button>
+  </form>
+</div>
