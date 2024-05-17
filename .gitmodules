@@ -25,3 +25,6 @@
 [submodule "Skill Tests/02-Backend Skill Test/Polling_System_api"]
 	path = Skill Tests/02-Backend Skill Test/Polling_System_api
 	url = https://github.com/arshali2774/Polling_System_API_CN
+[submodule "Skill Tests/01-Frontend Skill Test/IMDB_CLONE"]
+	path = Skill Tests/01-Frontend Skill Test/IMDB_CLONE
+	url = https://github.com/arshali2774/Coding_Ninja_IMDB_project
