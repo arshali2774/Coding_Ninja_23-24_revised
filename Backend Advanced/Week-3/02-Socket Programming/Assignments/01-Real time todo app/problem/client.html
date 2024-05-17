@@ -1,0 +1,94 @@
+<!-- no need to change the prewritten code.
+complete the script tag code. -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Task Management App</title>
+  </head>
+
+  <body>
+    <div id="task-form">
+      <!-- Create a form to add new tasks -->
+      <form id="create-task-form">
+        <input
+          type="text"
+          id="task-text"
+          placeholder="Enter a new task"
+          name="task"
+          required
+        />
+        <button id="create-task" type="submit">Add Task</button>
+      </form>
+    </div>
+
+    <div id="task-list">
+      <!-- Tasks will be displayed here -->
+    </div>
+
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io.connect('http://localhost:3000');
+
+      // -------------------write your code here.--------------------
+      const taskForm = document.getElementById('create-task-form');
+      const taskList = document.getElementById('task-list');
+
+      function displayTask(data) {
+        const taskContainer = document.createElement('div');
+        const taskText = document.createElement('p');
+        const deleteTask = document.createElement('button');
+
+        taskText.innerText = data.task;
+        deleteTask.innerText = 'Delete Task';
+        taskContainer.appendChild(taskText);
+        taskContainer.appendChild(deleteTask);
+        taskContainer.style.display = 'flex';
+        taskContainer.style.gap = '10px';
+        taskList.appendChild(taskContainer);
+
+        deleteTask.addEventListener('click', function () {
+          socket.emit('deleteTask', data.id);
+        });
+        socket.on('taskDeleted', () => {
+          taskContainer.remove();
+        });
+      }
+      function displayAllTask(data) {
+        data.forEach((t) => {
+          const taskContainer = document.createElement('div');
+          const taskText = document.createElement('p');
+          const deleteTask = document.createElement('button');
+
+          taskText.innerText = t.text;
+          deleteTask.innerText = 'Delete Task';
+          taskContainer.appendChild(taskText);
+          taskContainer.appendChild(deleteTask);
+          taskContainer.style.display = 'flex';
+          taskContainer.style.gap = '10px';
+          taskList.appendChild(taskContainer);
+
+          deleteTask.addEventListener('click', function () {
+            socket.emit('deleteTask', t._id);
+            // Remove task container from DOM
+          });
+          socket.on('taskDeleted', () => {
+            taskContainer.remove();
+          });
+        });
+      }
+      taskForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const task = e.target.task.value;
+        socket.emit('addTask', task);
+      });
+
+      socket.on('addTask', (data) => {
+        displayTask(data);
+      });
+      socket.on('allTasks', async (data) => {
+        displayAllTask(data);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,177 @@
+<!-- No need to change the pre-written code.
+Implement the features inside the script tag -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chat-Room App</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <div id="AppBar">
+      <h1>Chat App</h1>
+    </div>
+    <div id="login-container">
+      <!-- form to enter username and room ID -->
+      <form id="login-form">
+        <input
+          type="text"
+          id="username-input"
+          placeholder="Enter your username"
+          required
+          name="username"
+        />
+        <input
+          type="text"
+          id="room-input"
+          placeholder="Enter room ID"
+          required
+          name="roomId"
+        />
+        <button id="start-chatting" type="submit">Start Chatting</button>
+      </form>
+    </div>
+
+    <div id="chat-container">
+      <!-- message display area -->
+      <div id="message-display">
+        <!-- Messages will be appended here -->
+      </div>
+
+      <!-- form to send messages -->
+      <form id="message-form">
+        <input
+          type="text"
+          id="message-input"
+          placeholder="Type your message"
+          required
+          name="message"
+        />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io.connect('http://localhost:3000');
+
+      // ----------------- Write your code here ---------------
+
+      const loginForm = document.getElementById('login-form');
+      const messageForm = document.getElementById('message-form');
+      const loginContainer = document.getElementById('login-container');
+
+      let username, roomId;
+      //welcome New user
+      function displayWelcomeMessage(message) {
+        loginContainer.style.transform = 'translateY(-100%)';
+        const welcomeContainer = document.createElement('div');
+        welcomeContainer.style.height = 'calc(80px - 1rem)';
+        welcomeContainer.style.width = '100%';
+        welcomeContainer.style.padding = '1rem';
+        welcomeContainer.style.backgroundColor = '#1a254c';
+        welcomeContainer.style.position = 'absolute';
+        welcomeContainer.style.top = '100%';
+        welcomeContainer.style.left = '0';
+        welcomeContainer.style.display = 'flex';
+        welcomeContainer.style.justifyContent = 'center';
+        welcomeContainer.style.alignItems = 'center';
+        const welcomeText = document.createElement('p');
+        welcomeText.innerText = message;
+        welcomeText.style.color = 'rgb(253, 198, 198)';
+        welcomeText.style.fontFamily = 'inherit';
+        welcomeText.style.fontSize = '1.5rem';
+        welcomeContainer.appendChild(welcomeText);
+        loginContainer.appendChild(welcomeContainer);
+      }
+      // Function to display messages
+      function displayMessage(data) {
+        const messageDisplay = document.getElementById('message-display');
+        const messageElement = document.createElement('div');
+        const messageUsername = document.createElement('p');
+        const messageUserMessage = document.createElement('p');
+        const messageTime = document.createElement('p');
+        const { name, message, timestamp } = data;
+        messageUsername.innerText = name;
+        messageUserMessage.innerText = message;
+        messageTime.innerText = timestamp.formattedTime;
+        messageUsername.style.color = 'rgb(181, 90, 89)';
+        messageUsername.style.fontWeight = 'bold';
+        messageUsername.style.fontSize = '11px';
+        messageUserMessage.style.color = 'rgb(253, 198, 198)';
+        messageUserMessage.style.fontSize = '22px';
+        messageUserMessage.style.marginBottom = '5px';
+        messageTime.style.color = 'rgb(206, 121, 120)';
+        messageTime.style.fontSize = '11px';
+        messageTime.style.alignSelf = 'flex-end';
+
+        if (username === name) {
+          messageElement.style.alignSelf = 'flex-end';
+        } else {
+          messageElement.style.alignSelf = 'flex-start';
+        }
+        messageElement.style.background = '#334C77';
+        messageElement.style.padding = '.5rem 1rem';
+        messageElement.style.display = 'flex';
+        messageElement.style.flexDirection = 'column';
+        messageElement.style.borderRadius = '10px';
+        messageElement.appendChild(messageUsername);
+        messageElement.appendChild(messageUserMessage);
+        messageElement.appendChild(messageTime);
+        messageDisplay.appendChild(messageElement);
+        messageDisplay.scrollTop = messageDisplay.scrollHeight;
+      }
+      function displayRoomAlert(message) {
+        const messageDisplay = document.getElementById('message-display');
+        const messageElement = document.createElement('div');
+        messageElement.style.backgroundColor = 'rgb(206, 121, 120)';
+        messageElement.style.color = 'rgb(12, 19, 55)';
+        messageElement.style.alignSelf = 'center';
+        messageElement.style.padding = '.3rem 1rem';
+        messageElement.style.borderRadius = '20px';
+        messageElement.style.fontSize = '12px';
+        messageElement.style.fontWeight = 'bold';
+        messageElement.innerText = message;
+        messageDisplay.appendChild(messageElement);
+        messageDisplay.scrollTop = messageDisplay.scrollHeight;
+      }
+
+      loginForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        username = e.target.username.value;
+        roomId = e.target.roomId.value;
+        socket.emit('joinRoom', { username, roomId });
+      });
+      //message extraction
+      messageForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (roomId) {
+          const message = e.target.message.value;
+          // Emit message to server
+          socket.emit('chatMessage', { username, roomId, message });
+          // we don't have to do this locally.
+          // // Display message locally
+          // displayMessage(`${username}: ${message}`);
+          // Clear input field
+          e.target.message.value = '';
+        } else {
+          alert('Please join a room first');
+        }
+      });
+      // Listen for incoming messages
+      socket.on('message', function (message) {
+        displayMessage(message);
+      });
+      // Listen for incoming messages
+      socket.on('roomAlert', function (message) {
+        displayRoomAlert(message);
+      });
+      // Listen for incoming messages
+      socket.on('welcome', function (message) {
+        displayWelcomeMessage(message);
+      });
+    </script>
+  </body>
+</html>

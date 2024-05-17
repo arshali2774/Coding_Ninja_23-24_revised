@@ -1,0 +1,866 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Postaway - Social Media",
+    "description": "A simple social media REST API docs",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "JWT": {
+        "in": "cookie",
+        "name": "jwtToken",
+        "type": "apiKey"
+      }
+    }
+  },
+  "paths": {
+    "/api/v1/users/signup": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Register User",
+        "description": "Register a new user with the provided name, email, password, and gender.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 50,
+                    "description": "User's full name"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User's email address"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 6,
+                    "description": "User's password"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "enum": ["Male", "Female", "Other"],
+                    "description": "User's gender"
+                  }
+                },
+                "required": ["name", "email", "password", "gender"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User Registered"
+          },
+          "400": {
+            "description": "Incorrect Credentials or Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/users/signin": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Login user",
+        "description": "Login user with email and password. The JWT token is saved in a cookie named `jwtToken`. Also adding token in tokens array for each login. This way we can logout user from all devices.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User's email address"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "User's password"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User logged in successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/users/logout": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Logout User",
+        "description": "Logout user by clearing the jwtToken from cookie and removing the token from the tokens array.",
+        "security": [{ "JWT": {} }],
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/users/logout-all-devices": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Logout User from all devices",
+        "description": "Logout user by clearing the jwtToken from cookie and removing all the token from the tokens array.",
+        "security": [{ "JWT": {} }],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/users/get-details/{userId}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get user details",
+        "description": "Get user details using userId.",
+        "security": [{ "JWT": {} }],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user whose details are requested.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/users/get-all-details": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get all users details",
+        "description": "Get all users details.",
+        "security": [{ "JWT": {} }],
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/users/update-details/{userId}": {
+      "put": {
+        "tags": ["Users"],
+        "summary": "Update user details.",
+        "description": "Update user details, when user is logged in. User can change name, email, gender and password. It is not necessary to provide all details in body. Only the details you want to change.",
+        "security": [{ "JWT": {} }],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user whose details are requested.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "gender": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/posts": {
+      "post": {
+        "tags": ["Posts"],
+        "summary": "Add a post",
+        "description": "Add a post to the system. This endpoint accepts a multipart/form-data request with an image file and a caption. The `imageUrl` and `caption` are two form fields expected in the request body. The user ID is obtained from the authenticated user's session.",
+        "security": [{ "JWT": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imageUrl": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Image file for the post"
+                  },
+                  "caption": {
+                    "type": "string",
+                    "description": "Caption for the post"
+                  }
+                },
+                "required": ["imageUrl", "caption"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Post added successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Posts"],
+        "summary": "Get all posts by user",
+        "description": "Retrieves all posts created by the authenticated user. The user ID is extracted from the authenticated user's session.",
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Posts fetched successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/posts/all": {
+      "get": {
+        "tags": ["Posts"],
+        "summary": "Get all posts by all users",
+        "description": "Retrieves all posts created by all users in the system.",
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Posts fetched successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/posts/{postId}": {
+      "get": {
+        "tags": ["Posts"],
+        "summary": "Get post by post ID",
+        "description": "Retrieves a specific post by its ID.",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "description": "ID of the post to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Post fetched successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      },
+
+      "delete": {
+        "tags": ["Posts"],
+        "summary": "Delete post by post ID",
+        "description": "Deletes a specific post by its ID.",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "description": "ID of the post to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Post deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      },
+
+      "put": {
+        "tags": ["Posts"],
+        "summary": "Update post by post ID",
+        "description": "Update a specific post by its ID.",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "description": "ID of the post to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "JWT": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imageUrl": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Image file for the post"
+                  },
+                  "caption": {
+                    "type": "string",
+                    "description": "Caption for the post"
+                  }
+                },
+                "required": ["imageUrl", "caption"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Post updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      }
+    },
+    "/api/v1/comments/{postId}": {
+      "post": {
+        "tags": ["Comments"],
+        "summary": "Create a comment for a post",
+        "description": "Creates a new comment associated with the specified post.",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "description": "ID of the post to create a comment for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "JWT": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "Text content of the comment"
+                  }
+                },
+                "required": ["content"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Comment created successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Comments"],
+        "summary": "Get comments for a post",
+        "description": "Retrieves comments associated with the specified post.",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "description": "ID of the post to retrieve comments for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Comments fetched successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Post not found"
+          }
+        }
+      }
+    },
+    "/api/v1/comments/{commentId}": {
+      "put": {
+        "tags": ["Comments"],
+        "summary": "Update a comment by comment ID",
+        "description": "Updates a specific comment by its ID.",
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "description": "ID of the comment to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "JWT": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "description": "Updated content of the comment"
+                  }
+                },
+                "required": ["content"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Comment updated successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Comment not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Comments"],
+        "summary": "Delete a comment by comment ID",
+        "description": "Deletes a specific comment by its ID.",
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "description": "ID of the comment to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Comment deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Comment not found"
+          }
+        }
+      }
+    },
+    "/api/v1/likes/toggle/{id}": {
+      "get": {
+        "tags": ["Likes"],
+        "summary": "Toggle like on a post or comment",
+        "description": "Toggles the like status on a post or comment identified by the provided ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the post or comment to toggle like.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Type of the entity (Post or Comment) to toggle like.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["Posts", "Comments"]
+            }
+          }
+        ],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Like toggled successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Post or comment not found"
+          }
+        }
+      }
+    },
+    "/api/v1/likes/{id}": {
+      "get": {
+        "tags": ["Likes"],
+        "summary": "Get likes on a post or comment",
+        "description": "Retrieves the likes on a post or comment identified by the provided ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the post or comment to retrieve likes.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Likes retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Post or comment not found"
+          }
+        }
+      }
+    },
+    "/api/v1/friends/get-friends/{userId}": {
+      "get": {
+        "tags": ["Friends"],
+        "summary": "Get user's friends",
+        "description": "Retrieves the list of friends for the specified user.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user to get friends for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Friends retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/v1/friends/get-pending-requests": {
+      "get": {
+        "tags": ["Friends"],
+        "summary": "Get pending friend requests",
+        "description": "Retrieves the list of pending friend requests for the authenticated user.",
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Pending requests retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/friends/toggle-friendship/{friendId}": {
+      "get": {
+        "tags": ["Friends"],
+        "summary": "Toggle friendship status",
+        "description": "Toggles the friendship status with the specified user. This will either send a friend request with status pending or if the other user is already a friend then it will remove that friendship from the database.",
+        "parameters": [
+          {
+            "name": "friendId",
+            "in": "path",
+            "description": "ID of the user to toggle friendship status with.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Friendship status toggled successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/v1/friends/response-to-request/{friendId}": {
+      "get": {
+        "tags": ["Friends"],
+        "summary": "Respond to friend request",
+        "description": "Responds to the friend request received from the specified user. When a friend request is sent then you should login with other user and accept the friend request.",
+        "parameters": [
+          {
+            "name": "friendId",
+            "in": "path",
+            "description": "ID of the user to respond to friend request.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Status of the friend request (accept or reject).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["accept", "reject"]
+            }
+          }
+        ],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Response sent successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/v1/otp/send": {
+      "post": {
+        "tags": ["OTP"],
+        "summary": "Send OTP to Email",
+        "description": "Sends a one-time password (OTP) to the user's email address for verification.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "User's email address"
+                  }
+                },
+                "required": ["email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP sent to email successfully"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/otp/verify": {
+      "post": {
+        "tags": ["OTP"],
+        "summary": "Verify OTP",
+        "description": "Verifies the one-time password (OTP) provided by the user.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "User's email address"
+                  },
+                  "otp": {
+                    "type": "string",
+                    "description": "Six-digit one-time password (OTP) received by the user"
+                  }
+                },
+                "required": ["email", "otp"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP verified successfully"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1/otp/reset-password": {
+      "post": {
+        "tags": ["OTP"],
+        "summary": "Reset Password with OTP",
+        "description": "Resets the user's password using the provided one-time password (OTP).",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "User's email address"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "description": "User's new password"
+                  }
+                },
+                "required": ["email", "newPassword"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successfully"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    }
+  }
+}
