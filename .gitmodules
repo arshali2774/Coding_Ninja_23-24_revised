@@ -4,3 +4,12 @@
 [submodule "Backend Basics/Week-4/04-Postaway"]
 	path = Backend Basics/Week-4/04-Postaway
 	url = https://github.com/arshali2774/Postaway-CN
+[submodule "Skill Tests/Backend Skill Test/Habit_tracker"]
+	path = Skill Tests/Backend Skill Test/Habit_tracker
+	url = https://github.com/arshali2774/Habit_Tracker_CN
+[submodule "Skill Tests/Backend Skill Test/Authentication_template"]
+	path = Skill Tests/Backend Skill Test/Authentication_template
+	url = https://github.com/arshali2774/Nodejs_auth_CN
+[submodule "Skill Tests/Backend Skill Test/Polling_System_API"]
+	path = Skill Tests/Backend Skill Test/Polling_System_API
+	url = https://github.com/arshali2774/Polling_System_API_CN
