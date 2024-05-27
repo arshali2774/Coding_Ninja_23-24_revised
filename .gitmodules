@@ -28,3 +28,6 @@
 [submodule "Skill Tests/01-Frontend Skill Test/IMDB_CLONE"]
 	path = Skill Tests/01-Frontend Skill Test/IMDB_CLONE
 	url = https://github.com/arshali2774/Coding_Ninja_IMDB_project
+[submodule "Skill Tests/03-React Skill Test/CN_DropDown"]
+	path = Skill Tests/03-React Skill Test/CN_DropDown
+	url = https://github.com/arshali2774/CN_DropDown
