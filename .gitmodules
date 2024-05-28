@@ -31,3 +31,6 @@
 [submodule "Skill Tests/03-React Skill Test/CN_DropDown"]
 	path = Skill Tests/03-React Skill Test/CN_DropDown
 	url = https://github.com/arshali2774/CN_DropDown
+[submodule "Skill Tests/03-React Skill Test/CN_ContactApp"]
+	path = Skill Tests/03-React Skill Test/CN_ContactApp
+	url = https://github.com/arshali2774/CN_ContactApp
